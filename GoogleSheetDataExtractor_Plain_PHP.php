@@ -47,19 +47,18 @@ class GoogleSheetDataExtractor
     		return null;
     	}
 
-    	// Calculate number of rows
-    	$numberOfRows = (int)$formattedRange[1] - (int)$formattedRange[0] + 1;
-
-    	// Flatten response array
-    	$flattenedArray = $this->flattenedArray($array['table']['rows']);
-
     	// Calculate no. of columns
-    	$numberOfColumns = count($flattenedArray)/$numberOfRows;
+    	$numberOfColumns = count($array['table']['cols']);
 
-    	// Make sure response array can be evenly divided into smaller arrays
-    	if((int)$numberOfColumns !== $numberOfColumns){
-    		return null;
-    	}
+        // Default value
+        $rowsArray = [];
+
+        // Extract data
+        foreach($array['table']['rows'] as $element){
+            foreach($element['c'] as $innerElement){
+                array_push($rowsArray, $innerElement['v'] ?? null);
+            }
+        }
 
     	// Evenly split array into smaller chunk and return it
     	return array_chunk($flattenedArray, $numberOfColumns);
