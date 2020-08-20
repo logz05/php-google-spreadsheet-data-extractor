@@ -61,7 +61,7 @@ class GoogleSheetDataExtractor
         }
 
     	// Evenly split array into smaller chunk and return it
-    	return array_chunk($flattenedArray, $numberOfColumns);
+    	return array_chunk($rowsArray, $numberOfColumns);
     }
 
     public function getData(string $sheetId, string $sheetName, string $range, string $query) : ?array
