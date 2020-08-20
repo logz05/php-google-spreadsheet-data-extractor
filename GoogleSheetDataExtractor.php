@@ -2,9 +2,7 @@
 
 namespace App\Adapters;
 
-// Requires 'https://github.com/guzzle/guzzle'
 use GuzzleHttp\Client;
-// Requires 'https://laravel.com/api/5.8/Illuminate/Support/Arr.html'
 use Illuminate\Support\Arr;
 
 class GoogleSheetDataExtractor
@@ -17,13 +15,13 @@ class GoogleSheetDataExtractor
     	$this->client = new Client(['verify' => false, 'http_errors' => false]);
     }
 
-    public function getHTTPResponse(string $url) : ?object
+    public function getHTTPResponse(string $url) : ?string
     {
     	// Perform 'GET' request
     	$response = (new Client(['verify' => false, 'http_errors' => false]))->request('GET', $url);
 
     	// Return response if no error is encountered
-    	return $response->getStatusCode() === 200 ? $response->getBody() : null;
+    	return $response->getStatusCode() === 200 ? $response->getBody()->getContents() : null;
     }
 
     public function getJSONArray(string $jsonString) : array
@@ -47,22 +45,21 @@ class GoogleSheetDataExtractor
     		return null;
     	}
 
-    	// Calculate number of rows
-    	$numberOfRows = (int)$formattedRange[1] - (int)$formattedRange[0] + 1;
-
-    	// Flatten response array
-    	$flattenedArray = Arr::flatten($array['table']['rows']);
-
     	// Calculate no. of columns
-    	$numberOfColumns = count($flattenedArray)/$numberOfRows;
+    	$numberOfColumns = count($array['table']['cols']);
 
-    	// Make sure response array can be evenly divided into smaller arrays
-    	if((int)$numberOfColumns !== $numberOfColumns){
-    		return null;
-    	}
+        // Default value
+        $rowsArray = [];
+
+        // Extract data
+        foreach($array['table']['rows'] as $element){
+            foreach($element['c'] as $innerElement){
+                array_push($rowsArray, $innerElement['v'] ?? null);
+            }
+        }
 
     	// Evenly split array into smaller chunk and return it
-    	return array_chunk($flattenedArray, $numberOfColumns);
+    	return array_chunk($rowsArray, $numberOfColumns);
     }
 
     public function getData(string $sheetId, string $sheetName, string $range, string $query) : ?array
@@ -72,7 +69,7 @@ class GoogleSheetDataExtractor
 
     	// Send 'GET' request to Google Sheet and get response
     	$response = $this->getHTTPResponse("https://docs.google.com/spreadsheets/d/$sheetId/gviz/tq?sheet=$sheetName&range=$range&tq=$query");
-
+       
     	// Make sure response exists
     	if(!$response){
     		return null;
