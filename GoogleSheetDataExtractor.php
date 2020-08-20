@@ -17,7 +17,7 @@ class GoogleSheetDataExtractor
     	$this->client = new Client(['verify' => false, 'http_errors' => false]);
     }
 
-    public function getHTTPRequest(string $url) : ?object
+    public function getHTTPResponse(string $url) : ?object
     {
     	// Perform 'GET' request
     	$response = (new Client(['verify' => false, 'http_errors' => false]))->request('GET', $url);
@@ -71,7 +71,7 @@ class GoogleSheetDataExtractor
     	$query = urlencode($query);
 
     	// Send 'GET' request to Google Sheet and get response
-    	$response = $this->getHTTPRequest("https://docs.google.com/spreadsheets/d/$sheetId/gviz/tq?sheet=$sheetName&range=$range&tq=$query");
+    	$response = $this->getHTTPResponse("https://docs.google.com/spreadsheets/d/$sheetId/gviz/tq?sheet=$sheetName&range=$range&tq=$query");
 
     	// Make sure response exists
     	if(!$response){
