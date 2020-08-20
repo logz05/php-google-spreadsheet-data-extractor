@@ -1,3 +1,3 @@
-# GoogleSheetDataExtractor
+# PHP Google Sheet Data Extractor
 
-PHP Extract Google Sheet data via QUERY link method *(without any Google Sheets API)*
+Extract Google Sheet data via QUERY link method *(without any Google Sheets API)*
