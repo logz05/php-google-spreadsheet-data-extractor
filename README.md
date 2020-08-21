@@ -1,6 +1,6 @@
 # PHP Google Sheet Data Extractor
 
-Extract Google Sheet data via QUERY link method *(without any Google Sheets API)*
+Extract Google Sheet data via QUERY link method *(without any Google Sheets API)* (Requires PHP 7.X)
 
 #### ![#00ff5e](https://via.placeholder.com/15/5e00ff/000000/?text=+) Make sure to set your sheet to be public viewable
 <p align="center">
