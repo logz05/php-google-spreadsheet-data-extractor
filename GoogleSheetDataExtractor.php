@@ -32,7 +32,7 @@ class GoogleSheetDataExtractor
         $endIndex = strrpos($jsonString,')');
 
         // Extract out json string and parse into associative array
-        return json_decode(substr($jsonString, $startIndex + 1, $endIndex - $startIndex - 1), true);
+        return json_decode(substr($jsonString, $startIndex + 1, $endIndex - $startIndex - 1), true) ?? [];
     }
 
     public function getRows(array $array, string $range) : ?array
@@ -41,7 +41,7 @@ class GoogleSheetDataExtractor
     	$formattedRange = explode(':', preg_replace("/[^0-9\:]/", "", $range));
 
     	// Make sure 'formattedRange' is an array of length 2
-    	if(count($formattedRange) !== 2){
+    	if(count($formattedRange) !== 2 || !count($array)){
     		return null;
     	}
 
